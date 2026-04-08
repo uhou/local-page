@@ -4,133 +4,230 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>商品管理解决方案</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            slate: {
-              50: '#f8fafc',
-              100: '#f1f5f9',
-              200: '#e2e8f0',
-              300: '#cbd5e1',
-              400: '#94a3b8',
-              500: '#64748b',
-              600: '#475569',
-              700: '#334155',
-              800: '#1e293b',
-              900: '#0f172a',
-              950: '#020617',
-            }
-          }
+          fontFamily: {
+            sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
         }
       }
     }
   </script>
-  <style type="text/tailwindcss">
-    @layer utilities {
-      .content-auto {
-        content-visibility: auto;
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.6s forwards;
-      }
-      .animate-slide-up {
-        animation: slideUp 0.6s forwards;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
+  <style>
+    /* Base */
+    *, *::before, *::after { box-sizing: border-box; }
+    body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes aurora {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animate-fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-slide-up { animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-aurora { animation: aurora 8s ease-in-out infinite; }
+    .animate-gradient { animation: gradientMove 15s ease infinite; background-size: 200% 200%; }
+
+    /* Scroll-triggered animation */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-fade-in, .animate-slide-up, .animate-float, .animate-aurora, .animate-gradient { animation: none !important; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* Glass card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    /* Premium card hover */
+    .card-hover {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(99, 102, 241, 0.08);
+    }
+
+    /* Accent icon container */
+    .icon-box {
+      background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+      border: 1px solid rgba(99, 102, 241, 0.12);
+    }
+
+    /* Section gradient mesh */
+    .mesh-bg {
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.04), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(168, 85, 247, 0.04), transparent),
+        radial-gradient(ellipse 50% 50% at 50% 0%, rgba(59, 130, 246, 0.03), transparent);
+    }
+
+    /* Premium divider */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15), transparent);
+    }
+
+    /* Badge glow */
+    .badge-glow {
+      background: linear-gradient(135deg, #EEF2FF, #F5F3FF);
+      border: 1px solid rgba(99, 102, 241, 0.12);
+      color: #4338CA;
+    }
+
+    /* Step connector */
+    .step-number {
+      background: linear-gradient(135deg, #6366F1, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
   </style>
 </head>
-<body class="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-100 text-slate-900">
+<body class="min-h-screen bg-white text-slate-900 font-sans">
 
-  <!-- 顶部 Banner -->
-  <section class="relative overflow-hidden border-b border-slate-200">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.10),transparent_30%),radial-gradient(circle_at_left,rgba(99,102,241,0.10),transparent_25%)]"></div>
-    <div class="relative mx-auto max-w-7xl px-6 py-20 md:py-28">
-      <div class="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr] animate-fade-in">
+  <!-- ========== Hero Banner ========== -->
+  <section class="relative overflow-hidden">
+    <!-- Aurora background -->
+    <div class="absolute inset-0 mesh-bg"></div>
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-indigo-200/20 via-violet-200/15 to-transparent rounded-full blur-3xl animate-aurora"></div>
+    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-blue-200/15 via-indigo-200/10 to-transparent rounded-full blur-3xl animate-aurora" style="animation-delay: 4s;"></div>
+
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 lg:py-32">
+      <div class="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr] animate-fade-in">
         <div>
-          <span class="mb-5 inline-block rounded-full bg-slate-100 px-3 py-1 text-xs">商品管理解决方案</span>
-          <h1 class="max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
+          <span class="badge-glow mb-6 inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+            商品管理解决方案
+          </span>
+          <h1 class="max-w-4xl text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1]">
             用一套统一的商品管理平台，
-            <span class="text-slate-500">解决上新慢、信息乱、审核重、经营弱</span>
+            <span class="bg-gradient-to-r from-slate-400 via-slate-500 to-slate-400 bg-clip-text text-transparent">解决上新慢、信息乱、审核重、经营弱</span>
           </h1>
-          <p class="mt-6 max-w-3xl text-lg leading-8 text-slate-600">
+          <p class="mt-6 max-w-3xl text-lg leading-8 text-slate-500">
             面向平台招商、电商零售与多商家业务场景，打造覆盖商品底座、配置管理、审核治理、供给诊断与经营分析的一体化商品管理平台，
-            让商品从“能管理”升级为“能经营”。
+            让商品从"能管理"升级为"能经营"。
           </p>
           <div class="mt-8 flex flex-wrap gap-3">
-            <button class="rounded-2xl bg-slate-900 px-6 py-2 text-white font-medium">查看解决方案 <i class="fa fa-arrow-right ml-1"></i></button>
-            <button class="rounded-2xl border border-slate-200 px-6 py-2 bg-white">核心能力概览</button>
+            <button class="cursor-pointer rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-2.5 text-white text-sm font-medium shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:from-indigo-500 hover:to-violet-500 transition-all duration-200 inline-flex items-center gap-1.5">
+              查看解决方案
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+            <button class="cursor-pointer rounded-xl border border-slate-200 px-6 py-2.5 bg-white text-sm font-medium text-slate-700 hover:border-indigo-200 hover:text-indigo-600 transition-all duration-200">
+              核心能力概览
+            </button>
           </div>
           <div class="mt-8 flex flex-wrap gap-2">
-            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs">统一商品主数据</span>
-            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs">模板化建品</span>
-            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs">规则化审核</span>
-            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs">供给诊断</span>
-            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs">经营数据闭环</span>
+            <span class="badge-glow rounded-full px-3 py-1 text-xs font-medium">统一商品主数据</span>
+            <span class="badge-glow rounded-full px-3 py-1 text-xs font-medium">模板化建品</span>
+            <span class="badge-glow rounded-full px-3 py-1 text-xs font-medium">规则化审核</span>
+            <span class="badge-glow rounded-full px-3 py-1 text-xs font-medium">供给诊断</span>
+            <span class="badge-glow rounded-full px-3 py-1 text-xs font-medium">经营数据闭环</span>
           </div>
         </div>
 
-        <div class="animate-slide-up delay-100">
-          <div class="rounded-3xl border border-slate-200 shadow-sm bg-white p-6">
-            <div class="font-semibold text-lg flex items-center gap-2 mb-4">
-              <i class="fa fa-store"></i> 方案总览
+        <div class="animate-float">
+          <div class="glass-card rounded-3xl border border-white/60 shadow-xl shadow-indigo-500/5 p-6">
+            <div class="font-semibold text-lg flex items-center gap-2.5 mb-5">
+              <div class="icon-box rounded-xl p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><rect x="2" y="7" width="20" height="5" rx="1"/></svg>
+              </div>
+              方案总览
             </div>
             <div class="grid gap-3">
-              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div class="rounded-2xl border border-slate-100 bg-white/60 p-4 card-hover cursor-default">
                 <div class="flex items-start gap-3">
-                  <div class="rounded-2xl bg-white p-2 shadow-sm border border-slate-200"><i class="fa fa-database"></i></div>
+                  <div class="icon-box rounded-xl p-2 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+                  </div>
                   <div>
-                    <div class="font-semibold">统一商品底座</div>
-                    <div class="mt-2 flex flex-wrap gap-2 text-xs">
-                      <span class="rounded-full bg-white px-2 py-1 border">统一商品主数据</span>
-                      <span class="rounded-full bg-white px-2 py-1 border">标准类目/属性模型</span>
+                    <div class="font-semibold text-sm">统一商品底座</div>
+                    <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
+                      <span class="rounded-md bg-indigo-50 px-2 py-0.5 text-indigo-600 font-medium">统一商品主数据</span>
+                      <span class="rounded-md bg-indigo-50 px-2 py-0.5 text-indigo-600 font-medium">标准类目/属性模型</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div class="rounded-2xl border border-slate-100 bg-white/60 p-4 card-hover cursor-default">
                 <div class="flex items-start gap-3">
-                  <div class="rounded-2xl bg-white p-2 shadow-sm border border-slate-200"><i class="fa fa-th"></i></div>
+                  <div class="icon-box rounded-xl p-2 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                  </div>
                   <div>
-                    <div class="font-semibold">商品配置中心</div>
-                    <div class="mt-2 flex flex-wrap gap-2 text-xs">
-                      <span class="rounded-full bg-white px-2 py-1 border">模板化建品</span>
-                      <span class="rounded-full bg-white px-2 py-1 border">价格/库存统一管理</span>
+                    <div class="font-semibold text-sm">商品配置中心</div>
+                    <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
+                      <span class="rounded-md bg-indigo-50 px-2 py-0.5 text-indigo-600 font-medium">模板化建品</span>
+                      <span class="rounded-md bg-indigo-50 px-2 py-0.5 text-indigo-600 font-medium">价格/库存统一管理</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div class="rounded-2xl border border-slate-100 bg-white/60 p-4 card-hover cursor-default">
                 <div class="flex items-start gap-3">
-                  <div class="rounded-2xl bg-white p-2 shadow-sm border border-slate-200"><i class="fa fa-search"></i></div>
+                  <div class="icon-box rounded-xl p-2 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                  </div>
                   <div>
-                    <div class="font-semibold">审核治理中心</div>
-                    <div class="mt-2 flex flex-wrap gap-2 text-xs">
-                      <span class="rounded-full bg-white px-2 py-1 border">基础审核</span>
-                      <span class="rounded-full bg-white px-2 py-1 border">规则校验</span>
+                    <div class="font-semibold text-sm">审核治理中心</div>
+                    <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
+                      <span class="rounded-md bg-indigo-50 px-2 py-0.5 text-indigo-600 font-medium">基础审核</span>
+                      <span class="rounded-md bg-indigo-50 px-2 py-0.5 text-indigo-600 font-medium">规则校验</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div class="rounded-2xl border border-slate-100 bg-white/60 p-4 card-hover cursor-default">
                 <div class="flex items-start gap-3">
-                  <div class="rounded-2xl bg-white p-2 shadow-sm border border-slate-200"><i class="fa fa-tachometer"></i></div>
+                  <div class="icon-box rounded-xl p-2 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+                  </div>
                   <div>
-                    <div class="font-semibold">供给经营诊断</div>
-                    <div class="mt-2 flex flex-wrap gap-2 text-xs">
-                      <span class="rounded-full bg-white px-2 py-1 border">供给覆盖度</span>
-                      <span class="rounded-full bg-white px-2 py-1 border">动销/转化表现</span>
+                    <div class="font-semibold text-sm">供给经营诊断</div>
+                    <div class="mt-2 flex flex-wrap gap-1.5 text-xs">
+                      <span class="rounded-md bg-indigo-50 px-2 py-0.5 text-indigo-600 font-medium">供给覆盖度</span>
+                      <span class="rounded-md bg-indigo-50 px-2 py-0.5 text-indigo-600 font-medium">动销/转化表现</span>
                     </div>
                   </div>
                 </div>
@@ -142,111 +239,160 @@
     </div>
   </section>
 
-  <!-- 业务痛点 -->
-  <section class="mx-auto max-w-7xl px-6 py-20">
-    <div class="max-w-3xl mb-10">
-      <span class="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs mb-4">业务痛点</span>
-      <h2 class="text-3xl md:text-4xl font-bold text-slate-900">为什么需要统一的商品管理平台</h2>
-      <p class="mt-3 text-base md:text-lg leading-7 text-slate-600">当商品规模、商家数量和业务形态不断增长，传统依赖人工和分散系统的方式会越来越难支撑效率、质量与经营目标。</p>
+  <div class="section-divider"></div>
+
+  <!-- ========== 业务痛点 ========== -->
+  <section class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+    <div class="max-w-3xl mb-12 reveal">
+      <span class="badge-glow inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+        业务痛点
+      </span>
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight">为什么需要统一的商品管理平台</h2>
+      <p class="mt-4 text-base md:text-lg leading-7 text-slate-500">当商品规模、商家数量和业务形态不断增长，传统依赖人工和分散系统的方式会越来越难支撑效率、质量与经营目标。</p>
     </div>
 
-    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-      <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="mb-4 inline-flex rounded-2xl border bg-slate-50 p-3"><i class="fa fa-layer-group"></i></div><h3 class="text-lg font-semibold">商品信息分散</h3><p class="mt-3 text-sm leading-6 text-slate-600">商品基础信息、价格、库存、资质、图片与类目属性分散在不同系统，口径不一致，运营协同成本高。</p></div></div>
-      <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="mb-4 inline-flex rounded-2xl border bg-slate-50 p-3"><i class="fa fa-random"></i></div><h3 class="text-lg font-semibold">上新与变更效率低</h3><p class="mt-3 text-sm leading-6 text-slate-600">新商品上线依赖人工表格流转，配置链路长、审批链路慢，导致供给接入和活动响应不及时。</p></div></div>
-      <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="mb-4 inline-flex rounded-2xl border bg-slate-50 p-3"><i class="fa fa-shield"></i></div><h3 class="text-lg font-semibold">审核标准不统一</h3><p class="mt-3 text-sm leading-6 text-slate-600">商家资质、商品规则、展示规范和风控校验缺少统一机制，容易出现漏审、错审和重复审核。</p></div></div>
-      <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="mb-4 inline-flex rounded-2xl border bg-slate-50 p-3"><i class="fa fa-bar-chart"></i></div><h3 class="text-lg font-semibold">缺乏经营反馈闭环</h3><p class="mt-3 text-sm leading-6 text-slate-600">只能看到商品数量，无法看清什么商品好卖、什么信息影响转化、哪些供给该扶持或淘汰。</p></div></div>
-    </div>
-  </section>
-
-  <!-- 解决方案 -->
-  <section class="border-y border-slate-200 bg-slate-50 py-20">
-    <div class="mx-auto max-w-7xl px-6">
-      <div class="max-w-3xl mb-12">
-        <span class="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs mb-4">解决方案</span>
-        <h2 class="text-3xl md:text-4xl font-bold text-slate-900">一套平台，打通商品从接入、治理到经营的全链路</h2>
-        <p class="mt-3 text-base md:text-lg leading-7 text-slate-600">核心不是单纯做一个商品后台，而是把商品作为平台中的统一经营对象，形成可复用、可扩展、可度量的标准体系。</p>
-      </div>
-
-      <div class="grid gap-6 lg:grid-cols-4">
-        <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 bg-white shadow-sm p-6"><div class="mb-3 inline-flex rounded-2xl border bg-slate-50 p-3"><i class="fa fa-database"></i></div><h3 class="text-xl font-bold mb-3">统一商品底座</h3><div class="space-y-3 text-sm"><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>统一商品主数据</span></div><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>标准类目 / 属性模型</span></div><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>多业务共享同一商品对象</span></div></div></div></div>
-        <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 bg-white shadow-sm p-6"><div class="mb-3 inline-flex rounded-2xl border bg-slate-50 p-3"><i class="fa fa-th"></i></div><h3 class="text-xl font-bold mb-3">商品配置中心</h3><div class="space-y-3 text-sm"><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>模板化建品</span></div><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>多品类字段扩展</span></div><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>价格 / 库存 / 标签统一管理</span></div></div></div></div>
-        <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 bg-white shadow-sm p-6"><div class="mb-3 inline-flex rounded-2xl border bg-slate-50 p-3"><i class="fa fa-search"></i></div><h3 class="text-xl font-bold mb-3">审核治理中心</h3><div class="space-y-3 text-sm"><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>基础审核</span></div><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>规则校验</span></div><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>资质校验与异常预警</span></div></div></div></div>
-        <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 bg-white shadow-sm p-6"><div class="mb-3 inline-flex rounded-2xl border bg-slate-50 p-3"><i class="fa fa-tachometer"></i></div><h3 class="text-xl font-bold mb-3">供给经营诊断</h3><div class="space-y-3 text-sm"><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>供给覆盖度</span></div><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>动销 / 转化表现</span></div><div class="flex items-start gap-2"><i class="fa fa-check-circle text-slate-600 mt-1"></i><span>问题商品识别与优化建议</span></div></div></div></div>
-      </div>
+    <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm shadow-slate-100"><div class="mb-4 inline-flex rounded-xl icon-box p-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m2 12 8.58 3.91a2 2 0 0 0 1.66 0L22 12"/><path d="m2 17 8.58 3.91a2 2 0 0 0 1.66 0L22 17"/></svg></div><h3 class="text-lg font-semibold">商品信息分散</h3><p class="mt-3 text-sm leading-6 text-slate-500">商品基础信息、价格、库存、资质、图片与类目属性分散在不同系统，口径不一致，运营协同成本高。</p></div></div>
+      <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm shadow-slate-100"><div class="mb-4 inline-flex rounded-xl icon-box p-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5" fill="#6366F1"/></svg></div><h3 class="text-lg font-semibold">上新与变更效率低</h3><p class="mt-3 text-sm leading-6 text-slate-500">新商品上线依赖人工表格流转，配置链路长、审批链路慢，导致供给接入和活动响应不及时。</p></div></div>
+      <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm shadow-slate-100"><div class="mb-4 inline-flex rounded-xl icon-box p-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div><h3 class="text-lg font-semibold">审核标准不统一</h3><p class="mt-3 text-sm leading-6 text-slate-500">商家资质、商品规则、展示规范和风控校验缺少统一机制，容易出现漏审、错审和重复审核。</p></div></div>
+      <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm shadow-slate-100"><div class="mb-4 inline-flex rounded-xl icon-box p-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg></div><h3 class="text-lg font-semibold">缺乏经营反馈闭环</h3><p class="mt-3 text-sm leading-6 text-slate-500">只能看到商品数量，无法看清什么商品好卖、什么信息影响转化、哪些供给该扶持或淘汰。</p></div></div>
     </div>
   </section>
 
-  <!-- 核心能力 -->
-  <section class="mx-auto max-w-7xl px-6 py-20">
-    <div class="max-w-3xl mb-10">
-      <span class="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs mb-4">核心能力</span>
-      <h2 class="text-3xl md:text-4xl font-bold text-slate-900">既能支撑日常管理，也能支撑平台化扩张</h2>
-      <p class="mt-3 text-base md:text-lg leading-7 text-slate-600">围绕商品对象建立标准能力中心，让运营、商家、审核、经营分析都围绕同一套商品体系协作。</p>
-    </div>
+  <div class="section-divider"></div>
 
-    <div class="grid gap-6 lg:grid-cols-2">
-      <div class="animate-slide-up"><div class="rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="flex items-center gap-3 mb-5"><div class="rounded-2xl border bg-slate-50 p-2"><i class="fa fa-star"></i></div><h3 class="text-xl font-semibold">商品中心</h3></div><div class="grid gap-3 sm:grid-cols-2"><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">商品列表与详情</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">SPU / SKU 管理</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">多渠道商品映射</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">批量操作</div></div></div></div>
-      <div class="animate-slide-up"><div class="rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="flex items-center gap-3 mb-5"><div class="rounded-2xl border bg-slate-50 p-2"><i class="fa fa-star"></i></div><h3 class="text-xl font-semibold">类目与属性中心</h3></div><div class="grid gap-3 sm:grid-cols-2"><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">类目树管理</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">属性模板</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">必填规则</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">前台展示字段配置</div></div></div></div>
-      <div class="animate-slide-up"><div class="rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="flex items-center gap-3 mb-5"><div class="rounded-2xl border bg-slate-50 p-2"><i class="fa fa-star"></i></div><h3 class="text-xl font-semibold">商家协同</h3></div><div class="grid gap-3 sm:grid-cols-2"><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">商家建品入口</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">待审池</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">驳回反馈</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">规则说明与操作日志</div></div></div></div>
-      <div class="animate-slide-up"><div class="rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="flex items-center gap-3 mb-5"><div class="rounded-2xl border bg-slate-50 p-2"><i class="fa fa-star"></i></div><h3 class="text-xl font-semibold">经营看板</h3></div><div class="grid gap-3 sm:grid-cols-2"><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">供给覆盖度</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">热销商品识别</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">低质商品预警</div><div class="rounded-2xl border bg-slate-50 px-4 py-3 text-sm">选品优化建议</div></div></div></div>
-    </div>
-  </section>
-
-  <!-- 业务流程 -->
-  <section class="border-y border-slate-200 bg-white py-20">
-    <div class="mx-auto max-w-7xl px-6">
-      <div class="max-w-3xl mb-12">
-        <span class="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs mb-4">业务流程</span>
-        <h2 class="text-3xl md:text-4xl font-bold text-slate-900">把商品管理从“后台动作”升级成“经营闭环”</h2>
-        <p class="mt-3 text-base md:text-lg leading-7 text-slate-600">通过标准对象、标准流程和标准指标，把商品接入、治理、展示和优化串成一条连续链路。</p>
+  <!-- ========== 解决方案 ========== -->
+  <section class="relative py-20 md:py-24 mesh-bg">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-12 reveal">
+        <span class="badge-glow inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium mb-5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          解决方案
+        </span>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">一套平台，打通商品从接入、治理到经营的全链路</h2>
+        <p class="mt-4 text-base md:text-lg leading-7 text-slate-500">核心不是单纯做一个商品后台，而是把商品作为平台中的统一经营对象，形成可复用、可扩展、可度量的标准体系。</p>
       </div>
 
-      <div class="grid gap-6 lg:grid-cols-4">
-        <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm p-6"><div class="text-sm font-semibold text-slate-400">STEP 01</div><div class="mt-2 text-xl font-bold">统一基础信息</div><p class="mt-3 text-sm leading-6 text-slate-600">沉淀商品主数据、类目、属性、品牌、图片与规则，建立统一商品底座。</p></div></div>
-        <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm p-6"><div class="text-sm font-semibold text-slate-400">STEP 02</div><div class="mt-2 text-xl font-bold">标准化建品与变更</div><p class="mt-3 text-sm leading-6 text-slate-600">按品类模板快速创建商品，支持批量导入、字段校验、版本管理与变更留痕。</p></div></div>
-        <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm p-6"><div class="text-sm font-semibold text-slate-400">STEP 03</div><div class="mt-2 text-xl font-bold">审核发布</div><p class="mt-3 text-sm leading-6 text-slate-600">通过资质校验、规则审核、内容审核与人工复核联动，保障商品可售与合规。</p></div></div>
-        <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm p-6"><div class="text-sm font-semibold text-slate-400">STEP 04</div><div class="mt-2 text-xl font-bold">经营诊断与优化</div><p class="mt-3 text-sm leading-6 text-slate-600">围绕供给丰富度、动销率、转化率、问题商品识别持续优化商品池。</p></div></div>
+      <div class="grid gap-5 lg:grid-cols-4">
+        <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white/80 backdrop-blur-sm p-6 card-hover cursor-default shadow-sm"><div class="mb-4 inline-flex rounded-xl icon-box p-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></div><h3 class="text-xl font-bold mb-4">统一商品底座</h3><div class="space-y-3 text-sm"><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">统一商品主数据</span></div><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">标准类目 / 属性模型</span></div><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">多业务共享同一商品对象</span></div></div></div></div>
+        <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white/80 backdrop-blur-sm p-6 card-hover cursor-default shadow-sm"><div class="mb-4 inline-flex rounded-xl icon-box p-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></div><h3 class="text-xl font-bold mb-4">商品配置中心</h3><div class="space-y-3 text-sm"><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">模板化建品</span></div><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">多品类字段扩展</span></div><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">价格 / 库存 / 标签统一管理</span></div></div></div></div>
+        <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white/80 backdrop-blur-sm p-6 card-hover cursor-default shadow-sm"><div class="mb-4 inline-flex rounded-xl icon-box p-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div><h3 class="text-xl font-bold mb-4">审核治理中心</h3><div class="space-y-3 text-sm"><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">基础审核</span></div><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">规则校验</span></div><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">资质校验与异常预警</span></div></div></div></div>
+        <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white/80 backdrop-blur-sm p-6 card-hover cursor-default shadow-sm"><div class="mb-4 inline-flex rounded-xl icon-box p-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg></div><h3 class="text-xl font-bold mb-4">供给经营诊断</h3><div class="space-y-3 text-sm"><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">供给覆盖度</span></div><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">动销 / 转化表现</span></div><div class="flex items-start gap-2"><svg class="mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-slate-600">问题商品识别与优化建议</span></div></div></div></div>
       </div>
     </div>
   </section>
 
-  <!-- 业务价值 -->
-  <section class="mx-auto max-w-7xl px-6 py-20">
-    <div class="max-w-3xl mb-10">
-      <span class="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs mb-4">业务价值</span>
-      <h2 class="text-3xl md:text-4xl font-bold text-slate-900">最终带来的，不只是一个系统，而是一套商品经营方法</h2>
-      <p class="mt-3 text-base md:text-lg leading-7 text-slate-600">商品管理平台的目标不是把流程搬到线上，而是帮助业务真正实现供给可控、效率可提、质量可管、增长可看。</p>
+  <div class="section-divider"></div>
+
+  <!-- ========== 核心能力 ========== -->
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+    <div class="max-w-3xl mb-12 reveal">
+      <span class="badge-glow inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+        核心能力
+      </span>
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight">既能支撑日常管理，也能支撑平台化扩张</h2>
+      <p class="mt-4 text-base md:text-lg leading-7 text-slate-500">围绕商品对象建立标准能力中心，让运营、商家、审核、经营分析都围绕同一套商品体系协作。</p>
     </div>
 
-    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-      <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="text-sm text-slate-500">提升接入效率</div><div class="mt-3 text-2xl font-bold">标准化建品</div><p class="mt-3 text-sm leading-6 text-slate-600">通过统一模板、字段规则和流程配置，让新业务、新商家、新品类接入更快。</p></div></div>
-      <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="text-sm text-slate-500">提升管理质量</div><div class="mt-3 text-2xl font-bold">规则化治理</div><p class="mt-3 text-sm leading-6 text-slate-600">让商品审核从人工经验变为系统规则，降低错误率，提升线上信息一致性。</p></div></div>
-      <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="text-sm text-slate-500">提升经营效果</div><div class="mt-3 text-2xl font-bold">数据驱动选品</div><p class="mt-3 text-sm leading-6 text-slate-600">围绕曝光、点击、转化、动销表现形成商品经营闭环，指导选品与投放。</p></div></div>
-      <div class="animate-slide-up"><div class="h-full rounded-3xl border border-slate-200 shadow-sm bg-white p-6"><div class="text-sm text-slate-500">支撑多业务扩张</div><div class="mt-3 text-2xl font-bold">平台化复用</div><p class="mt-3 text-sm leading-6 text-slate-600">同一套商品能力支持不同业务线、不同商家模式和不同渠道页面快速复制。</p></div></div>
+    <div class="grid gap-5 lg:grid-cols-2">
+      <div class="reveal"><div class="rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm"><div class="flex items-center gap-3 mb-5"><div class="icon-box rounded-xl p-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h3 class="text-xl font-semibold">商品中心</h3></div><div class="grid gap-2.5 sm:grid-cols-2"><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">商品列表与详情</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">SPU / SKU 管理</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">多渠道商品映射</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">批量操作</div></div></div></div>
+      <div class="reveal"><div class="rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm"><div class="flex items-center gap-3 mb-5"><div class="icon-box rounded-xl p-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h3 class="text-xl font-semibold">类目与属性中心</h3></div><div class="grid gap-2.5 sm:grid-cols-2"><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">类目树管理</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">属性模板</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">必填规则</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">前台展示字段配置</div></div></div></div>
+      <div class="reveal"><div class="rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm"><div class="flex items-center gap-3 mb-5"><div class="icon-box rounded-xl p-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h3 class="text-xl font-semibold">商家协同</h3></div><div class="grid gap-2.5 sm:grid-cols-2"><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">商家建品入口</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">待审池</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">驳回反馈</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">规则说明与操作日志</div></div></div></div>
+      <div class="reveal"><div class="rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm"><div class="flex items-center gap-3 mb-5"><div class="icon-box rounded-xl p-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h3 class="text-xl font-semibold">经营看板</h3></div><div class="grid gap-2.5 sm:grid-cols-2"><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">供给覆盖度</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">热销商品识别</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">低质商品预警</div><div class="rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm text-slate-600 hover:bg-indigo-50 hover:border-indigo-100 hover:text-indigo-700 transition-colors duration-200 cursor-default">选品优化建议</div></div></div></div>
     </div>
   </section>
 
-  <!-- 底部黑色区域 -->
-  <section class="border-t border-slate-200 bg-slate-950 text-white py-16">
-    <div class="mx-auto max-w-7xl px-6">
+  <div class="section-divider"></div>
+
+  <!-- ========== 业务流程 ========== -->
+  <section class="relative py-20 md:py-24 mesh-bg">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-12 reveal">
+        <span class="badge-glow inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium mb-5">
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+          业务流程
+        </span>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">把商品管理从"后台动作"升级成"经营闭环"</h2>
+        <p class="mt-4 text-base md:text-lg leading-7 text-slate-500">通过标准对象、标准流程和标准指标，把商品接入、治理、展示和优化串成一条连续链路。</p>
+      </div>
+
+      <div class="grid gap-5 lg:grid-cols-4">
+        <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white/80 backdrop-blur-sm p-6 card-hover cursor-default shadow-sm relative overflow-hidden"><div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-50 to-violet-50 rounded-bl-3xl"></div><div class="relative"><div class="text-xs font-bold step-number tracking-widest">STEP 01</div><div class="mt-2.5 text-xl font-bold">统一基础信息</div><p class="mt-3 text-sm leading-6 text-slate-500">沉淀商品主数据、类目、属性、品牌、图片与规则，建立统一商品底座。</p></div></div></div>
+        <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white/80 backdrop-blur-sm p-6 card-hover cursor-default shadow-sm relative overflow-hidden"><div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-violet-50 to-purple-50 rounded-bl-3xl"></div><div class="relative"><div class="text-xs font-bold step-number tracking-widest">STEP 02</div><div class="mt-2.5 text-xl font-bold">标准化建品与变更</div><p class="mt-3 text-sm leading-6 text-slate-500">按品类模板快速创建商品，支持批量导入、字段校验、版本管理与变更留痕。</p></div></div></div>
+        <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white/80 backdrop-blur-sm p-6 card-hover cursor-default shadow-sm relative overflow-hidden"><div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-bl-3xl"></div><div class="relative"><div class="text-xs font-bold step-number tracking-widest">STEP 03</div><div class="mt-2.5 text-xl font-bold">审核发布</div><p class="mt-3 text-sm leading-6 text-slate-500">通过资质校验、规则审核、内容审核与人工复核联动，保障商品可售与合规。</p></div></div></div>
+        <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white/80 backdrop-blur-sm p-6 card-hover cursor-default shadow-sm relative overflow-hidden"><div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-fuchsia-50 to-pink-50 rounded-bl-3xl"></div><div class="relative"><div class="text-xs font-bold step-number tracking-widest">STEP 04</div><div class="mt-2.5 text-xl font-bold">经营诊断与优化</div><p class="mt-3 text-sm leading-6 text-slate-500">围绕供给丰富度、动销率、转化率、问题商品识别持续优化商品池。</p></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ========== 业务价值 ========== -->
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+    <div class="max-w-3xl mb-12 reveal">
+      <span class="badge-glow inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+        业务价值
+      </span>
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight">最终带来的，不只是一个系统，而是一套商品经营方法</h2>
+      <p class="mt-4 text-base md:text-lg leading-7 text-slate-500">商品管理平台的目标不是把流程搬到线上，而是帮助业务真正实现供给可控、效率可提、质量可管、增长可看。</p>
+    </div>
+
+    <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm"><div class="text-sm text-indigo-500 font-medium">提升接入效率</div><div class="mt-3 text-2xl font-bold">标准化建品</div><p class="mt-3 text-sm leading-6 text-slate-500">通过统一模板、字段规则和流程配置，让新业务、新商家、新品类接入更快。</p></div></div>
+      <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm"><div class="text-sm text-violet-500 font-medium">提升管理质量</div><div class="mt-3 text-2xl font-bold">规则化治理</div><p class="mt-3 text-sm leading-6 text-slate-500">让商品审核从人工经验变为系统规则，降低错误率，提升线上信息一致性。</p></div></div>
+      <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm"><div class="text-sm text-purple-500 font-medium">提升经营效果</div><div class="mt-3 text-2xl font-bold">数据驱动选品</div><p class="mt-3 text-sm leading-6 text-slate-500">围绕曝光、点击、转化、动销表现形成商品经营闭环，指导选品与投放。</p></div></div>
+      <div class="reveal"><div class="h-full rounded-2xl border border-slate-100 bg-white p-6 card-hover cursor-default shadow-sm"><div class="text-sm text-fuchsia-500 font-medium">支撑多业务扩张</div><div class="mt-3 text-2xl font-bold">平台化复用</div><p class="mt-3 text-sm leading-6 text-slate-500">同一套商品能力支持不同业务线、不同商家模式和不同渠道页面快速复制。</p></div></div>
+    </div>
+  </section>
+
+  <!-- ========== 底部 CTA ========== -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(99,102,241,0.15),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]"></div>
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent"></div>
+
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
       <div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <div class="flex items-center gap-2 text-slate-300 text-sm">
-            <i class="fa fa-users"></i> 面向平台业务、商家运营与商品治理团队
+          <div class="flex items-center gap-2 text-slate-400 text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            面向平台业务、商家运营与商品治理团队
           </div>
-          <h3 class="mt-4 text-3xl font-bold md:text-4xl">让商品管理从支撑业务，走向驱动业务</h3>
-          <p class="mt-4 max-w-3xl text-base leading-7 text-slate-300">
+          <h3 class="mt-5 text-3xl md:text-4xl font-bold tracking-tight text-white">让商品管理从支撑业务，走向驱动业务</h3>
+          <p class="mt-5 max-w-3xl text-base leading-7 text-slate-400">
             当商品成为统一管理对象，平台就拥有了跨业务复用、跨角色协同、跨链路经营的基础能力。
-            这也是从“项目式支撑”走向“平台式建设”的关键一步。
+            这也是从"项目式支撑"走向"平台式建设"的关键一步。
           </p>
         </div>
         <div class="flex flex-wrap gap-3">
-          <button class="rounded-2xl bg-slate-100 px-6 py-2 text-slate-900 font-medium">立即演示</button>
-          <button class="rounded-2xl border border-slate-700 bg-transparent px-6 py-2 text-white hover:bg-slate-900">查看详细方案</button>
+          <button class="cursor-pointer rounded-xl bg-white px-6 py-2.5 text-slate-900 text-sm font-medium hover:bg-slate-100 transition-colors duration-200 shadow-lg shadow-white/10">立即演示</button>
+          <button class="cursor-pointer rounded-xl border border-white/15 px-6 py-2.5 bg-white/5 text-white text-sm font-medium hover:bg-white/10 hover:border-white/25 transition-all duration-200 backdrop-blur-sm">查看详细方案</button>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Scroll reveal observer -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          // Stagger animation for sibling cards
+          const parent = entry.target.parentElement;
+          const siblings = parent ? Array.from(parent.querySelectorAll('.reveal')) : [];
+          const idx = siblings.indexOf(entry.target);
+          entry.target.style.transitionDelay = `${idx * 80}ms`;
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 
 </body>
 </html>
